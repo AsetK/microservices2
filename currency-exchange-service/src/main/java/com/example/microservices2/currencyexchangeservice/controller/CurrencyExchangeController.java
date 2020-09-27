@@ -1,6 +1,7 @@
 package com.example.microservices2.currencyexchangeservice.controller;
 
 import com.example.microservices2.currencyexchangeservice.entity.ExchangeValue;
+import com.example.microservices2.currencyexchangeservice.reposiotry.ExchangeValueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +16,15 @@ public class CurrencyExchangeController {
     @Autowired
     Environment environment;
 
+    @Autowired
+    ExchangeValueRepository exchangeValueRepository;
+
     @GetMapping("/currency-exchange/from/{from}/to/{to}")
     public ExchangeValue retrieveExchangeValue(@PathVariable String from, @PathVariable String to) {
         int port = Integer.parseInt(environment.getProperty("local.server.port"));
-        return new ExchangeValue(1L, from, to, BigDecimal.valueOf(5), port);
+        ExchangeValue exchangeValue = exchangeValueRepository.findByFromAndTo(from, to);
+        exchangeValue.setPort(port);
+        return exchangeValue;
     }
 
 }
