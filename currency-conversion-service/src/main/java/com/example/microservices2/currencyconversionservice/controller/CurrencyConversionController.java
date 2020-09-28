@@ -1,6 +1,7 @@
 package com.example.microservices2.currencyconversionservice.controller;
 
 import com.example.microservices2.currencyconversionservice.entity.CurrencyConversionBean;
+import com.example.microservices2.currencyconversionservice.restclient.CurrencyExchangeClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,24 @@ public class CurrencyConversionController {
 
     @Autowired
     Environment environment;
+
+    @Autowired
+    CurrencyExchangeClient currencyExchangeClient;
+
+    @GetMapping("/currency-converter-feign/from/{from}/to/{to}/quantity/{quantity}")
+    public CurrencyConversionBean convertCurrencyFeign(@PathVariable String from,
+                                                  @PathVariable String to,
+                                                  @PathVariable BigDecimal quantity) {
+        Integer port = Integer.valueOf(environment.getProperty("server.port"));
+
+        CurrencyConversionBean body = currencyExchangeClient.retrieveExchangeValue(from, to);
+
+        BigDecimal conversionMultiple = body.getConversionMultiple();
+
+        return new CurrencyConversionBean(1L, from, to,
+                conversionMultiple, quantity, quantity.multiply(conversionMultiple), port);
+
+    }
 
     @GetMapping("/currency-converter/from/{from}/to/{to}/quantity/{quantity}")
     public CurrencyConversionBean convertCurrency(@PathVariable String from,
