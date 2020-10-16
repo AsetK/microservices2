@@ -26,11 +26,10 @@ public class CurrencyConversionController {
     public CurrencyConversionBean convertCurrencyFeign(@PathVariable String from,
                                                   @PathVariable String to,
                                                   @PathVariable BigDecimal quantity) {
-        Integer port = Integer.valueOf(environment.getProperty("server.port"));
-
         CurrencyConversionBean body = currencyExchangeClient.retrieveExchangeValue(from, to);
 
         BigDecimal conversionMultiple = body.getConversionMultiple();
+        Integer port = body.getPort();
 
         return new CurrencyConversionBean(1L, from, to,
                 conversionMultiple, quantity, quantity.multiply(conversionMultiple), port);

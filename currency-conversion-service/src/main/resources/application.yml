@@ -3,3 +3,6 @@ spring:
     name: currency-conversion-service
 server:
   port: 8100
+
+#run two instances of currency-exchange-service on ports 8000,8001
+currency-exchange-service.ribbon.listOfServers: http://localhost:8000, http://localhost:8001
