@@ -15,6 +15,7 @@
         <module>limits-service</module>
         <module>spring-cloud-config-server</module>
         <module>netflix-eureka-naming-server</module>
+        <module>netflix-zuul-api-gateway-server</module>
     </modules>
 
 </project>
